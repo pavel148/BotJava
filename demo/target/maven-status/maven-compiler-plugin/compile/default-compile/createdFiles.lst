@@ -1,0 +1,4 @@
+io\proj3ct\demo\config\BotConfig.class
+io\proj3ct\demo\DemoApplication.class
+io\proj3ct\demo\servise\TelegramBot.class
+io\proj3ct\demo\config\BotInitializer.class
