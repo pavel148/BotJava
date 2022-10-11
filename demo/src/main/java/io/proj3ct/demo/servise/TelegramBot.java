@@ -85,7 +85,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 default:sendMessage(chatId, "Sory");
             }
         }
-       
+
     }
 
     private void register(long chatId)
@@ -151,6 +151,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     sendMessage(chatId,answer);
     }
     private void sendMessage(long chatId, String textToSend){
+        //сделай отдельный метод для клавиатуры
         SendMessage message=new SendMessage();
         message.setChatId(String.valueOf(chatId));
         message.setText(textToSend);
@@ -159,16 +160,16 @@ public class TelegramBot extends TelegramLongPollingBot {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
-        row.add("weather");
-        row.add("get random joke");
+        row.add("сделать заказ");
+        row.add("привязать карту");
 
         keyboardRows.add(row);
 
         row = new KeyboardRow();
 
-        row.add("register");
-        row.add("check my data");
-        row.add("delete my data");
+        row.add("скидки");
+        row.add("рестораны");
+        row.add("объявления");
 
         keyboardRows.add(row);
 
