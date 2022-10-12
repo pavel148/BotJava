@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
@@ -84,6 +85,46 @@ public class TelegramBot extends TelegramLongPollingBot {
                     break;
                 default:sendMessage(chatId, "Sory");
             }
+            ///метод для проспмотра что предалось сообщение вдруг мы нажади на кнопку
+            /// и тогда надо сделать действие
+        } else if(update.hasCallbackQuery()){
+            ///проверка каую из кнопоку нажал пользователь
+            String callbackData = update.getCallbackQuery().getData();
+            
+            
+            long messageId = update.getCallbackQuery().getMessage().getMessageId();
+            long chatId = update.getCallbackQuery().getMessage().getChatId();
+            ///используем для сранвение equals
+            if(callbackData.equals("YES_BUTTON")){
+                String text = "Поздравляю ты нажал Да";
+                EditMessageText message = new EditMessageText();
+                message.setChatId(String.valueOf(chatId));
+                message.setText(text);
+                ///указыаем что текст не просто был направлен а заменен в message
+                ///с таким то ID
+                ///+ тути тип long приводим к int
+                message.setMessageId((int)messageId);
+
+                ///просто тупо пихаем везде try catch -хех
+
+                try{
+                    execute(message);
+                }catch (TelegramApiException e){
+                    log.error("ERROR"+e.getMessage());
+                }
+            } else if (callbackData.equals("NO_BUTTON")) {
+                String text = "ты нажал нет";
+                EditMessageText message = new EditMessageText();
+                message.setChatId(String.valueOf(chatId));
+                message.setText(text);
+
+                message.setMessageId((int)messageId);
+                try{
+                    execute(message);
+                }catch (TelegramApiException e){
+                    log.error("ERROR"+e.getMessage());
+                }
+            }
         }
 
     }
@@ -118,7 +159,12 @@ public class TelegramBot extends TelegramLongPollingBot {
         markupInLine.setKeyboard(rowsInLine);
         massage.setReplyMarkup(markupInLine);
 
-        executeMessage(massage);
+        try{
+            execute(massage);
+        }catch (TelegramApiException e){
+            log.error("ERROR"+e.getMessage());
+        }
+
     }
 
     private void executeMessage(SendMessage massage)
@@ -166,7 +212,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         keyboardRows.add(row);
 
         row = new KeyboardRow();
-
         row.add("скидки");
         row.add("рестораны");
         row.add("объявления");
